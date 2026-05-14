@@ -2,11 +2,11 @@
 
 ---
 ## Miembros del equipo
-- Romero Hernández Juan José - 0324108222 - [CV](./CVs/Romero_Hernandez_Juan_Jose_English.pdf)
-- 
-- 
-- 
-- 
+- Romero Hernández Juan José 	 - 0324108222 - [CV](./CVs/Romero_Hernandez_Juan_Jose_English.pdf)
+- Aguilar Garcia David Gerardo	 - 
+- Días Benites Jorge Enrique	 - 
+- Vargas Juarez Rafael Alejandro - 
+- Becerra Garcia Angel Daniel	 - 
 
 ---
 
