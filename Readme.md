@@ -177,3 +177,6 @@ Incluye:
 - Definir si la bitácora de cambios será un documento separado o si se manejará mediante commits, issues y releases en GitHub.
 
 - Separar claramente el monitoreo de rendimiento, el monitoreo de seguridad y el monitoreo físico mediante IoT para que el proyecto sea más fácil de explicar.
+
+## Diagrama de referencia
+![Demo](sources/Diagrama_temporal_1.png)
