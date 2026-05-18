@@ -1,5 +1,7 @@
-# Mixtli
-## Proyecto de Alta Disponibilidad, Seguridad y Monitoreo de Infraestructura
+<p align="center">
+  <img src="./sources/Logo.png" alt="Logo MIXTLI" width="250">
+</p>
+<h3 align="center">Alta Disponibilidad, Seguridad y Monitoreo de Infraestructura</h3>
 
 ---
 ## Miembros del equipo
