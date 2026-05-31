@@ -5,188 +5,152 @@
 
 ---
 ## Miembros del equipo
-- Romero Hernández Juan José 	 - 0324108222 - [CV](./CVs/Romero_Hernandez_Juan_Jose_English.pdf)
-- Aguilar Garcia David Gerardo	 - 0324108223 - [CV](./CVs/Aguilar_Garcia_David_Gerardo_English.pdf)
-- Díaz Benitez Jorge Enrique	 - xxxxxxxxxx -	[CV](./CVs/Diaz_Benitez_Jorge_Enrique_English.pdf)
-- Becerra Garcia Angel Daniel	 - 0324108208 - [CV](./CVs/Becerra_Garcia_Angel_Daniel_English.pdf)
+- Romero Hernández Juan José     - 0324108222 - [CV](./CVs/Romero_Hernandez_Juan_Jose_English.pdf)
+- Aguilar Garcia David Gerardo   - 0324108223 - [CV](./CVs/Aguilar_Garcia_David_Gerardo_English.pdf)
+- Díaz Benitez Jorge Enrique     - xxxxxxxxxx - [CV](./CVs/Diaz_Benitez_Jorge_Enrique_English.pdf)
+- Becerra Garcia Angel Daniel    - 0324108208 - [CV](./CVs/Becerra_Garcia_Angel_Daniel_English.pdf)
 
 ---
 
-## 1. Alta disponibilidad por hardware, almacenamiento, DNS, routers y switches
+## 1. Alta disponibilidad por hardware, almacenamiento, routers y switches
 
-### 1.1 Hardware, almacenamiento y DNS
+### 1.1 Hardware, almacenamiento
 
-- Se utilizarán tres servidores físicos para ofrecer alta disponibilidad en las máquinas virtuales o nodos contratados por los usuarios.
+- Se utilizarán tres servidores fisicos para ofrecer alta disponibilidad en las máquinas virtuales o nodos contratados por los usuarios
 
-- Se utilizarán dos servidores para la alta disponibilidad del almacenamiento, junto con una copia adicional en un proveedor de nube como AWS, Azure u otro similar.
+- El almacenamiento contará con redundancia, replicación y respaldo externo para recuperación ante desastres. En este punto se piensa poner un proveedor externo alojado en la nube.
 
-- El almacenamiento contará con redundancia total, replicación y respaldo externo para recuperación ante desastres.
+- Se contemplará la configuración de intervalos de tiempo en los respaldos para reducir el riesgo de corrupción de backups ante desastres.
 
-- Se contemplará la configuración de intervalos de respaldo para reducir el riesgo de corrupción de backups ante incidentes como malware o fallos del sistema.
-
-- **Pendiente de revisión:** se evaluará la alta disponibilidad del dominio mediante DNS redundante, certificados SSL y servicios externos de resolución.
+- **Pendiente de mejora:** evaluar la posibilidad de alta disponibilidad en dominios DNS redundantes, certificados SSL.
 
 ### 1.2 Routers y switches
 
-- Se utilizará VRRP para alta disponibilidad entre routers.
+- Se configurará OSPF para tener mejor enrutamiento y lograr mejor adaptabilidad en cuanto a errores
 
-- Se utilizará EtherChannel mediante LACP para agrupar enlaces físicos y mejorar la disponibilidad en conexiones críticas.
+- Se implementará VRRP para alta disponibilidad entre los routers 
 
-- **Pendiente de revisión:** se implementarán VLANs adaptadas a la red, por ejemplo:
+- Se implementará EtherChannel mediante LACP para agrupar enlaces fisicos y mejorar la disponibilidad en conexiones criticas
 
-  - Administración
-  - Servicios / Clientes
-  - Almacenamiento
-  - Seguridad / Monitoreo
-  - IoT
-  - Otras VLANs según la necesidad del proyecto
+- Implementación de ACLs para controlar la comunicación entre segmentos de red
 
-- Se integrarán ACLs para controlar la comunicación entre segmentos de red.
+- Se implementará NAT/PAT para tener conexión a internet
 
-- Se implementará NAT/PAT para permitir la conexión con la red.
+- **Pendiente de revisión #1:** VLANs adaptadas a la red
 
-- Se documentará la topología física y lógica de la red, incluyendo VLANs, enlaces, direccionamiento IP, rutas y reglas aplicadas.
+- **Pendiente de revisión #2:** Reglas a aplicar en las ACLs
 
-- Se realizarán pruebas de failover para validar la disponibilidad ante fallos de enlaces o dispositivos.
+- **Pendiente de revisión #3:** Documentación de la topología física y logica, incluyendo tablas de direccionamiento, reglas ACL y VLANs.
+
+- **Pendiente de revisión #4:** Resultado de pruebas de failover para realizar tiempos estimados.
 
 ---
 
-## 2. Implementación de Kubernetes como servicio complementario
+## 2. Firewall, VPN y segmentación de seguridad
 
-- **Pendiente de revisión:** se evaluará la implementación de Kubernetes sobre varios nodos para ofrecer despliegue, reinicio automático y balanceo de servicios.
+- Se utilizará OPNsense o pfSense como firewall principal
 
-- El almacenamiento utilizado por Kubernetes se integrará con la infraestructura de alta disponibilidad.
+- Se implementará VPN utilizando algún proveedor por cuestiones de IPs publicas, esto será utiilzado para el uso de las VMs contratadas
 
-> **Nota:** este servicio podrá ofrecerse como un nivel avanzado para usuarios que requieran aplicaciones contenedorizadas.
-
----
-
-## 3. Firewall, VPN y segmentación de seguridad
-
-- Se utilizará OPNsense o pfSense como firewall principal.
-
-- Se evaluará la implementación de VPN para acceso remoto seguro.
-
-- Se configurarán reglas de filtrado, segmentación por VLANs y control de tráfico entre redes.
-
-- **Pendiente de revisión:** se aplicará hardening básico en servidores y servicios críticos.
+- **Pendiente de revisión #5:** Aplicar hardening básico a servidores y servicios críticos.
 
 ---
 
-## 4. Monitoreo de red, rendimiento y seguridad
+## 3. Monitoreo de red, rendimiento y seguridad
 
-- Se integrará Netdata para monitoreo de rendimiento en tiempo real.
+- Integraciónn de Wazuh como SIEM/XDR para centralizar eventos de seguridad
 
-- Se utilizará Wazuh como SIEM/XDR para centralizar eventos de seguridad.
+- Integración de Suricada como IDS/IPS/NSM para visualizar disponibilidad, rendimiento, eventos de seguridad y estado de los servicios
 
-- Se integrará Suricata como IDS/IPS/NSM para análisis de tráfico, detección de amenazas y generación de alertas.
-
-- Se implementará un dashboard centralizado para visualizar disponibilidad, rendimiento, eventos de seguridad y estado de los servicios.
+- **Revisar #1:**  Integrar Netdata para monitorear el rendimiento de la red en tiempo real. (El tema es que no es un servicio para ofrecer)
 
 ---
 
-## 5. Alertas y notificaciones
+## 4. Alertas y notificaciones
 
-- **Pendiente de revisión:** se configurarán alertas por Telegram o WhatsApp según el nivel del evento.
+- Las alertas podrán enviarse al administrador o al usuario final, dependiendo del tipo de servicio contratado
 
-- Las alertas podrán enviarse al administrador o al usuario final, dependiendo del tipo de servicio contratado.
+- Las alertas se clasificarán por priodidad (Esto puede ser cambiado en proximas revisiones):
+	
+	- Informativas
+	- Advertencias
+	- Críticas
 
-- Las alertas se clasificarán por prioridad:
-
-  - Informativas
-  - Advertencias
-  - Críticas
-
----
-
-## 6. Integración de IoT
-
-- Se implementará control de acceso mediante NFC/RFID para el rack o site.
-
-- Se evaluará la integración de cámaras de videovigilancia.
-
-- Se integrarán sensores de temperatura, humedad y condiciones ambientales.
-
-- Los datos de IoT podrán enviarse al sistema de monitoreo para generar alertas automáticas.
+- **Pendiente de revisión #6:** Serán enviadas las alertas por Telegram o WhatsApp según el nivel del evento
 
 ---
 
-## 7. Backups, recuperación y continuidad del servicio
+## 5. Integración de IoT
 
-- Se implementarán backups locales y en la nube.
+- **Pendiente de revisión #7:** Se implementará control de acceso mediante NFC/RFID para rack o site (Uso exclusivo por el momento)
 
-- Se definirán métricas de recuperación como RTO y RPO.
+- **Pendiente de revisión #8:** Se evaluará la posibilidad de integración de cámaras de videovigilancia con detección automatica con IA utilizando iSpy Agent 
 
-- Se realizarán pruebas periódicas de restauración para validar que los respaldos funcionen correctamente y no se corrompan ante incidentes como malware o fallos del sistema.
+- **Pendiente de revisión #9:** Se podrá implementar sensores de temperatura, humedad y condiciones ambientales. 
 
-- Se documentará un plan básico de recuperación ante desastres.
-
----
-
-## 8. Documentación, control de cambios y entrega formal
-
-- Se documentarán configuraciones, diagramas, direccionamiento IP, VLANs, reglas de firewall y servicios implementados.
-
-- Se utilizará GitHub para el control de versiones de scripts, configuraciones y documentación técnica.
-
-- Se mantendrá una bitácora de cambios para registrar modificaciones importantes.
-
-> **Nota:** evaluar si la bitácora de cambios se manejará directamente mediante GitHub y su historial de versiones.
-
-- Se preparará documentación formal para presentación, mantenimiento y escalabilidad del proyecto.
+- **Pendiente de revisión #10:** Los datos recopilados del IoT podrán enviarse al sistema de monitoreo para generar alertas automaticas.
 
 ---
 
-## 9. Modelo de servicio por niveles
+## 6. Backups, recuperación y continuidad del servicio
 
-Se ofrecerán diferentes niveles de servicio según las necesidades del usuario.
+- Se implementarán backups locales y en la nube
+
+- **Pendiente de revisión #11:** Se definirán metricas de recuperación como RTO (Objetivo de Tiempo de Recuperación)  y RPO (Objetivo de Punto de Recuperación). 
+
+- **Pendiente de revisión #12:** Realizar pruebas
+
+- **Pendiente de revisión #13:** Documento formal para tener un plan de recuperación ante desastres (Aunque sea básico)
+
+---
+
+## 7. Documentación, control de cambios y entrega formal
+
+- Se documentarán las configuraciones, diagramas, direcciones IP, VLANs, reglas del firewall y servicios implementados
+
+- Se utilizará GitHub para el control de versiones de scripts, configuraciones y documentación técnica
+
+- Se mantendrá una bitácora de cambios para registrar modificaciones importantes
+
+- Se preparará documentación formal IEEE, donde saldrá información para presentaciones, mantenimiento y posible escalabilidad del proyecto
+
+---
+
+## 8. Modelo de servicio por niveles
+
+Se ofrecerán diferentes niveles de servicio según las necesidades del usuario
 
 ### 9.1 Nivel básico
 
 Incluye:
 
-- Monitoreo
-- Alertas
-- Backups locales
+	- Monitoreo
+	- Alertas
+	- Backups locales
 
 ### 9.2 Nivel intermedio
 
 Incluye:
-
-- Firewall
-- VPN
-- SIEM
-- Backups locales y en la nube
+	
+	- Firewall
+	- VPN
+	- SIEM
+	- Backups locales y en la nube
 
 ### 9.3 Nivel avanzado
 
 Incluye:
 
-- Alta disponibilidad
-- Kubernetes
-- IoT
-- Dashboards
-- Soporte de recuperación ante amenazas
+	- Alta disponibilidad
+	- Dashboards
+	- IoT
+	- Soporte para recuperación ante amenazas
 
----
+--- 
 
-## Recomendaciones
+## Notas
 
-- Definir con claridad qué elementos quedarán como implementación obligatoria y cuáles permanecerán como pendientes de revisión.
-
-- Especificar el alcance real de Kubernetes, ya que para considerarse alta disponibilidad debe ejecutarse sobre varios nodos.
-
-- Definir previamente las VLANs, el direccionamiento IP y las reglas ACL para evitar cambios desordenados durante la implementación.
-
-- Confirmar si se utilizará OPNsense o pfSense como firewall principal para evitar duplicidad en la documentación.
-
-- Investigar y documentar correctamente los conceptos de RTO y RPO antes de definir la estrategia de recuperación.
-
-- Validar si las alertas serán enviadas únicamente a administradores o también a usuarios finales.
-
-- Definir si la bitácora de cambios será un documento separado o si se manejará mediante commits, issues y releases en GitHub.
-
-- Separar claramente el monitoreo de rendimiento, el monitoreo de seguridad y el monitoreo físico mediante IoT para que el proyecto sea más fácil de explicar.
+Evaluar cada **Pendiente de revisión** para un mejor desarrollo de proyecto, los niveles que se asignarán aún estan por definirse, sin embargo lo anteriormente previsto es una base.
 
 ## Diagrama de referencia
-![Demo](sources/Diagrama_temporal_1.png)
+![Diagrama](sources/Diagrama_temporal_1.png)
