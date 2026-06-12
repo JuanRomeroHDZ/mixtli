@@ -7,7 +7,7 @@
 ## Miembros del equipo
 - Romero Hernández Juan José     - 0324108222 - [CV](./CVs/Romero_Hernandez_Juan_Jose_English.pdf)
 - Aguilar Garcia David Gerardo   - 0324108223 - [CV](./CVs/Aguilar_Garcia_David_Gerardo_English.pdf)
-- Díaz Benitez Jorge Enrique     - xxxxxxxxxx - [CV](./CVs/Diaz_Benitez_Jorge_Enrique_English.pdf)
+- Díaz Benitez Jorge Enrique     - 0324108243 - [CV](./CVs/Diaz_Benitez_Jorge_Enrique_English.pdf)
 - Becerra Garcia Angel Daniel    - 0324108208 - [CV](./CVs/Becerra_Garcia_Angel_Daniel_English.pdf)
 
 ---
