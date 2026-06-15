@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./sources/Logo1.png" alt="Logo MIXTLI" width="250">
+  <img src="./Resources/Logo_proyecto_recortado.png" alt="Logo MIXTLI" width="250">
 </p>
 <h3 align="center">Alta Disponibilidad, Seguridad y Monitoreo de Infraestructura</h3>
 
@@ -153,4 +153,4 @@ Incluye:
 Evaluar cada **Pendiente de revisión** para un mejor desarrollo de proyecto, los niveles que se asignarán aún estan por definirse, sin embargo lo anteriormente previsto es una base.
 
 ## Diagrama de referencia
-![Diagrama](sources/Diagrama_temporal_1.png)
+![Diagrama](Resources/Diagrama_temporal_1.png)
