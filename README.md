@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./Resources/Logo_proyecto_recortado.png" alt="Logo MIXTLI" width="250">
+  <img src="./Resources/Logo_proyecto_completo.png" alt="Logo MIXTLI" width="250">
 </p>
 <h3 align="center">Alta Disponibilidad, Seguridad y Monitoreo de Infraestructura</h3>
 
