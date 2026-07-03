@@ -1,17 +1,15 @@
 enable
 configure terminal
 
-! --- Configuraciones Globales ---
 hostname MainRouter
 no ip domain-lookup
 ip domain-name mixtli.mixtli
-username admin_mixtli privilege 15 password admin_mixtli
 
-! --- Criptografia y SSH ---
+! --- Criptografia para SSH ---
 crypto key generate rsa general-keys modulus 2048
 ip ssh version 2
 
-! --- DHCP para la VLAN 30 (Excluyendo IPs fisicas y la virtual) ---
+! --- Servidor DHCP para la VLAN 30 ---
 ip dhcp excluded-address 172.16.0.1 172.16.0.10
 ip dhcp pool VLAN30_POOL
  network 172.16.0.0 255.255.0.0
@@ -19,20 +17,20 @@ ip dhcp pool VLAN30_POOL
  dns-server 8.8.8.8
  exit
 
-! --- Interfaz directa hacia SecundaryRouter ---
+! --- Enlace directo Inter-Router ---
 interface GigabitEthernet0/0
  description Link directo a SecundaryRouter G0/0
  ip address 10.10.4.1 255.255.255.248
  no shutdown
  exit
 
-! --- Interfaz Troncal hacia Switch S1 ---
+! --- Interfaz Fisica Troncal hacia Switch S1 ---
 interface GigabitEthernet0/1
  description Enlace Trunk a Switch S1
  no shutdown
  exit
 
-! --- Subinterfaz VLAN 10 (Administracion) ---
+! --- Subinterfaz VLAN 10 (Administracion) + HSRP ---
 interface GigabitEthernet0/1.10
  encapsulation dot1Q 10
  ip address 192.168.1.2 255.255.255.248
@@ -41,7 +39,7 @@ interface GigabitEthernet0/1.10
  standby 10 preempt
  exit
 
-! --- Subinterfaz VLAN 20 (Servidores) ---
+! --- Subinterfaz VLAN 20 (Servidores) + HSRP ---
 interface GigabitEthernet0/1.20
  encapsulation dot1Q 20
  ip address 192.168.20.2 255.255.255.0
@@ -50,7 +48,7 @@ interface GigabitEthernet0/1.20
  standby 20 preempt
  exit
 
-! --- Subinterfaz VLAN 30 (Publica / Estudiantes) ---
+! --- Subinterfaz VLAN 30 (Publica / Estudiantes) + HSRP ---
 interface GigabitEthernet0/1.30
  encapsulation dot1Q 30
  ip address 172.16.0.2 255.255.0.0
@@ -59,29 +57,37 @@ interface GigabitEthernet0/1.30
  standby 30 preempt
  exit
 
-! --- Serial hacia Gateway routermedify ---
+! --- Interfaz WAN hacia routermedify ---
 interface Serial0/0/0
- description Enlace Principal a routermedify S0/0/0
+ description WAN hacia routermedify S0/0/0
  ip address 10.10.1.1 255.255.255.248
  no shutdown
  exit
 
-! --- Serial OSPF hacia SecundaryRouter ---
-interface Serial0/0/1
- description Enlace OSPF hacia SecundaryRouter S0/0/0
- ip address 10.10.2.1 255.255.255.248
- no shutdown
- exit
-
-! --- Enrutamiento Dinamico OSPF ---
+! --- Proceso de Enrutamiento OSPF ---
 router ospf 1
  router-id 1.1.1.1
  network 10.10.1.0 0.0.0.7 area 0
- network 10.10.2.0 0.0.0.7 area 0
  network 10.10.4.0 0.0.0.7 area 0
  network 192.168.1.0 0.0.0.7 area 0
  network 192.168.20.0 0.0.0.255 area 0
  network 172.16.0.0 0.0.255.255 area 0
+ passive-interface GigabitEthernet0/1.10
+ passive-interface GigabitEthernet0/1.20
+ passive-interface GigabitEthernet0/1.30
+ exit
+
+! --- CONFIGURACIÓN DE USUARIO Y LÍNEAS (AL FINAL) ---
+username admin_mixtli privilege 15 password admin_mixtli
+
+line console 0
+ login local
+ logging synchronous
+ exit
+
+line vty 0 15
+ login local
+ transport input ssh
  exit
 
 end

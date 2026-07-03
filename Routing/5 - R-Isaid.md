@@ -1,32 +1,26 @@
 enable
 configure terminal
 
-! ============================================================
-! ROUTERMEDIFY - Gateway Perimetral
-! ============================================================
 hostname routermedify
-
-! --- Configuraciones Globales ---
 no ip domain-lookup
 ip domain-name mixtli.mixtli
-username admin_mixtli privilege 15 password admin_mixtli
 
-! --- Criptografia y SSH ---
+! --- Criptografia para SSH ---
 crypto key generate rsa general-keys modulus 2048
 ip ssh version 2
 
-! --- Limpieza de ACL ---
-no ip access-list extended ACL_WAN_IN
-
-! --- WAN a la universidad (Recibe DHCP) ---
-interface GigabitEthernet0/0
+! --- WAN hacia Universidad (DHCP e Internet) ---
+interface GigabitEthernet0/1
  description WAN hacia Universidad (DHCP)
  ip address dhcp
  ip nat outside
- ip verify unicast source reachable-via rx
- duplex auto
- speed auto
  no shutdown
+ exit
+
+! --- Interfaz Gigabit0/0 (Apagada/No usada) ---
+interface GigabitEthernet0/0
+ description No utilizada - Apagada por seguridad
+ shutdown
  exit
 
 ! --- Serial hacia MainRouter ---
@@ -47,32 +41,34 @@ interface Serial0/0/1
  no shutdown
  exit
 
-! --- PAT Unificado (Traduccion de red hacia Internet) ---
+! --- Listas de Acceso y PAT Unificado ---
+no access-list 1
 access-list 1 permit 10.10.1.0 0.0.0.7
 access-list 1 permit 10.10.3.0 0.0.0.7
 access-list 1 permit 192.168.0.0 0.0.255.255
 access-list 1 permit 172.16.0.0 0.15.255.255
-ip nat inside source list 1 interface GigabitEthernet0/0 overload
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
 
-! --- OSPF Proceso 1 ---
+! --- Proceso de Enrutamiento OSPF ---
 router ospf 1
  router-id 5.5.5.5
  network 10.10.1.0 0.0.0.7 area 0
  network 10.10.3.0 0.0.0.7 area 0
- passive-interface GigabitEthernet0/0
+ passive-interface GigabitEthernet0/1
  default-information originate
  exit
 
-! --- Consola Limpia ---
+! --- CONFIGURACIÓN DE USUARIO Y LÍNEAS (AL FINAL) ---
+username admin_mixtli privilege 15 password admin_mixtli
+
 line console 0
  login local
  logging synchronous
  exit
 
-line vty 0 4
+line vty 0 15
  login local
- logging synchronous
- transport input all
+ transport input ssh
  exit
 
 end
