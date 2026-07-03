@@ -2,35 +2,36 @@ enable
 configure terminal
 
 ! ============================================================
-! ROUTERMEDIFY - Gateway Perimetral Absoluto
+! ROUTERMEDIFY - Gateway Perimetral
 ! ============================================================
 hostname routermedify
 
+! --- Configuraciones Globales ---
 no ip domain-lookup
+ip domain-name mixtli.mixtli
+username admin_mixtli privilege 15 password admin_mixtli
 
-! --- Activación de SSH Seguro ---
+! --- Criptografia y SSH ---
 crypto key generate rsa general-keys modulus 2048
 ip ssh version 2
 
-! --- Limpieza estricta de cualquier configuración previa ---
+! --- Limpieza preventiva ---
 no access-list 1
-no ip nat inside source list 1 interface GigabitEthernet0/0 overload
-no router ospf 10
-no router ospf 1
 no ip access-list extended ACL_WAN_IN
-no ip access-list extended ACL_FROM_RISAID
 
-! --- INTERFAZ DE SALIDA: WAN hacia la Universidad (Internet) ---
+! --- WAN a la universidad (Revisa el cableado de esta interfaz!) ---
 interface GigabitEthernet0/0
  description WAN hacia Universidad (DHCP)
  ip address dhcp
  ip nat outside
  ip verify unicast source reachable-via rx
  ip access-group ACL_WAN_IN in
+ duplex auto
+ speed auto
  no shutdown
  exit
 
-! --- INTERFAZ DE ENTRADA: Serial Principal hacia MainRouter ---
+! --- Serial hacia MainRouter ---
 interface Serial0/0/0
  description WAN hacia MainRouter S0/0/0
  ip address 10.10.1.2 255.255.255.248
@@ -39,7 +40,7 @@ interface Serial0/0/0
  no shutdown
  exit
 
-! --- INTERFAZ DE ENTRADA: Serial de Respaldo hacia SecundaryRouter ---
+! --- Serial hacia SecundaryRouter ---
 interface Serial0/0/1
  description WAN hacia SecundaryRouter S0/0/1
  ip address 10.10.3.2 255.255.255.248
@@ -48,14 +49,14 @@ interface Serial0/0/1
  no shutdown
  exit
 
-! --- TRÁFICO DE SALIDA (PAT): Permisos de traducción unificados ---
+! --- PAT Unificado (Traduccion de red hacia Internet) ---
 access-list 1 permit 10.10.1.0 0.0.0.7
 access-list 1 permit 10.10.3.0 0.0.0.7
 access-list 1 permit 192.168.0.0 0.0.255.255
 access-list 1 permit 172.16.0.0 0.15.255.255
 ip nat inside source list 1 interface GigabitEthernet0/0 overload
 
-! --- ENRUTAMIENTO DINÁMICO: OSPF Proceso 1 (Armonizado) ---
+! --- OSPF Proceso 1 ---
 router ospf 1
  router-id 5.5.5.5
  network 10.10.1.0 0.0.0.7 area 0
@@ -64,16 +65,16 @@ router ospf 1
  default-information originate
  exit
 
-! --- SEGURIDAD PERIMETRAL: ACL WAN (Filtrado de entrada de Internet) ---
+! --- Seguridad ACL_WAN_IN ---
 ip access-list extended ACL_WAN_IN
- remark Anti-spoofing: Evita el ingreso de IPs privadas falsificadas como ORIGEN
+ remark Anti-spoofing
  deny   ip 10.0.0.0 0.255.255.255 any
  deny   ip 172.16.0.0 0.15.255.255 any
  deny   ip 192.168.0.0 0.0.255.255 any
  deny   ip 127.0.0.0 0.255.255.255 any
  deny   ip 169.254.0.0 0.0.255.255 any
  deny   ip 224.0.0.0 15.255.255.255 any
- remark Trafico legitimo de retorno (Puertos del servidor externo en el ORIGEN)
+ remark Trafico legitimo
  permit tcp any any established
  permit udp any eq domain any
  permit udp any eq ntp any
@@ -85,7 +86,7 @@ ip access-list extended ACL_WAN_IN
  deny   ip any any log
  exit
 
-! --- Configuración de Consola y Terminales Virtuales VTY ---
+! --- Consola Limpia ---
 line console 0
  login local
  logging synchronous
