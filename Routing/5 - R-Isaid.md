@@ -36,11 +36,5 @@ ip route 192.168.1.0 255.255.255.248 10.10.3.1 50
 ip route 192.168.20.0 255.255.255.0 10.10.3.1 50
 ip route 172.16.0.0 255.255.0.0 10.10.3.1 50
 
-line console 0
- login local
- exit
-line vty 0 4
- login local
- transport input all
  end
 write memory

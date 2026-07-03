@@ -1,0 +1,16 @@
+|**Dispositivo**|**Interfaz / Subint.**|**Tipo / Modo**|**IP Física**|**IP Virtual (HSRP)**|**Máscara de Red**|**VLAN**|**DHCP (Servidor)**|**Conectado a (Link To)**|**Notas / Detalles Clave**|
+|---|---|---|---|---|---|---|---|---|---|
+|**MainRouter**|`G0/0`|Enrutado|10.10.4.1|N/A|255.255.255.248|N/A|No|SecundaryRouter `G0/0`|Enlace directo Gigabit entre routers.|
+||`G0/1`|Troncal Físico|--|N/A|--|Todas|No|S1 `G0/1`|Base física para Router-on-a-Stick.|
+||`G0/1.10`|Subinterfaz|192.168.1.2|192.168.1.1|255.255.255.248|10|No|VLAN 10 (S1/S2)|Gateway Admins. HSRP Active (Prio: 110, Preempt).|
+||`G0/1.20`|Subinterfaz|192.168.20.2|192.168.20.1|255.255.255.0|20|No|VLAN 20 (S1/S2)|Gateway Servers. HSRP Active (Prio: 110, Preempt).|
+||`G0/1.30`|Subinterfaz|172.16.0.2|172.16.0.1|255.255.0.0|30|**Sí**|VLAN 30 (S1/S2)|Gateway Public_IP. HSRP Active. Pool Activo.|
+||`S0/0/0`|Serial|10.10.1.1|N/A|255.255.255.248|N/A|No|R-Isaid `S0/0/0`|Enlace Principal a Internet. Ruta estática por defecto.|
+||`S0/0/1`|Serial|10.10.2.1|N/A|255.255.255.248|N/A|No|SecundaryRouter `S0/0/0`|Enlace OSPF (Área 0). Ruta estática flotante AD 50.|
+|**SecundaryRouter**|`G0/0`|Enrutado|10.10.4.2|N/A|255.255.255.248|N/A|No|MainRouter `G0/0`|Enlace directo Gigabit entre routers.|
+||`G0/1`|Troncal Físico|--|N/A|--|Todas|No|S2 `G0/1`|Base física para Router-on-a-Stick.|
+||`G0/1.10`|Subinterfaz|192.168.1.3|192.168.1.1|255.255.255.248|10|No|VLAN 10 (S1/S2)|Gateway Admins. HSRP Standby (Prio: 100, Preempt).|
+||`G0/1.20`|Subinterfaz|192.168.20.3|192.168.20.1|255.255.0.0|20|No|VLAN 20 (S1/S2)|Gateway Servers. HSRP Standby (Prio: 100, Preempt).|
+||`G0/1.30`|Subinterfaz|172.16.0.3|172.16.0.1|255.255.0.0|30|**Sí**|VLAN 30 (S1/S2)|Gateway Public_IP. HSRP Standby. Pool de respaldo.|
+||`S0/0/0`|Serial|10.10.2.2|N/A|255.255.255.248|N/A|No|MainRouter `S0/0/1`|Enlace OSPF (Área 0). Ruta estática flotante AD 50.|
+||`S0/0/1`|Serial|10.10.3.1|N/A|255.255.255.248|N/A|No|R-Isaid `S0/0/1`|Enlace de Respaldo a Internet.|
