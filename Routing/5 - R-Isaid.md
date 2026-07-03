@@ -15,17 +15,15 @@ username admin_mixtli privilege 15 password admin_mixtli
 crypto key generate rsa general-keys modulus 2048
 ip ssh version 2
 
-! --- Limpieza preventiva ---
-no access-list 1
+! --- Limpieza de ACL ---
 no ip access-list extended ACL_WAN_IN
 
-! --- WAN a la universidad (Revisa el cableado de esta interfaz!) ---
+! --- WAN a la universidad (Recibe DHCP) ---
 interface GigabitEthernet0/0
  description WAN hacia Universidad (DHCP)
  ip address dhcp
  ip nat outside
  ip verify unicast source reachable-via rx
- ip access-group ACL_WAN_IN in
  duplex auto
  speed auto
  no shutdown
@@ -63,27 +61,6 @@ router ospf 1
  network 10.10.3.0 0.0.0.7 area 0
  passive-interface GigabitEthernet0/0
  default-information originate
- exit
-
-! --- Seguridad ACL_WAN_IN ---
-ip access-list extended ACL_WAN_IN
- remark Anti-spoofing
- deny   ip 10.0.0.0 0.255.255.255 any
- deny   ip 172.16.0.0 0.15.255.255 any
- deny   ip 192.168.0.0 0.0.255.255 any
- deny   ip 127.0.0.0 0.255.255.255 any
- deny   ip 169.254.0.0 0.0.255.255 any
- deny   ip 224.0.0.0 15.255.255.255 any
- remark Trafico legitimo
- permit tcp any any established
- permit udp any eq domain any
- permit udp any eq ntp any
- permit icmp any any echo-reply
- permit icmp any any unreachable
- permit icmp any any time-exceeded
- permit udp any any eq isakmp
- permit udp any any eq non500-isakmp
- deny   ip any any log
  exit
 
 ! --- Consola Limpia ---
