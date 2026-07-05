@@ -6,7 +6,7 @@ no ip domain-lookup
 ip domain-name mixtli.mixtli
 
 ! --- Criptografia para SSH ---
-crypto key generate rsa general-keys modulus 2048
+crypto key generate rsa general-keys modulus 1024
 ip ssh version 2
 
 ! --- WAN hacia Universidad (DHCP e Internet) ---
