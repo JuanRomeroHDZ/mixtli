@@ -5,10 +5,6 @@ hostname MainRouter
 no ip domain-lookup
 ip domain-name mixtli.mixtli
 
-! --- Criptografia para SSH ---
-crypto key generate rsa general-keys modulus 1024
-ip ssh version 2
-
 ! --- Servidor DHCP para la VLAN 30 ---
 ip dhcp excluded-address 172.16.0.1 172.16.0.10
 ip dhcp pool VLAN30_POOL
@@ -77,7 +73,12 @@ router ospf 1
  passive-interface GigabitEthernet0/1.30
  exit
 
-! --- CONFIGURACIÓN DE USUARIO Y LÍNEAS (AL FINAL) ---
+! ============================================================
+! CONFIGURACIÓN DE SEGURIDAD, CRIPTOGRAFÍA Y LÍNEAS (AL FINAL)
+! ============================================================
+crypto key generate rsa general-keys modulus 1024
+ip ssh version 2
+
 username admin_mixtli privilege 15 password admin_mixtli
 
 line console 0

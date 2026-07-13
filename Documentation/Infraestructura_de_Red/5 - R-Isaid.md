@@ -1,14 +1,6 @@
 enable
 configure terminal
 
-hostname routermedify
-no ip domain-lookup
-ip domain-name mixtli.mixtli
-
-! --- Criptografia para SSH ---
-crypto key generate rsa general-keys modulus 1024
-ip ssh version 2
-
 ! --- WAN hacia Universidad (DHCP e Internet) ---
 interface GigabitEthernet0/1
  description WAN hacia Universidad (DHCP)
@@ -56,19 +48,6 @@ router ospf 1
  network 10.10.3.0 0.0.0.7 area 0
  passive-interface GigabitEthernet0/1
  default-information originate
- exit
-
-! --- CONFIGURACIÓN DE USUARIO Y LÍNEAS (AL FINAL) ---
-username admin_mixtli privilege 15 password admin_mixtli
-
-line console 0
- login local
- logging synchronous
- exit
-
-line vty 0 15
- login local
- transport input ssh
  exit
 
 end
